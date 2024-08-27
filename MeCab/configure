@@ -1984,7 +1984,7 @@ fi
 
 # Define the identity of the package.
  PACKAGE=mecab-naist-jdic
- VERSION=0.4.3-20080812
+ VERSION=0.4.3-20080917
 
 
 cat >>confdefs.h <<_ACEOF
