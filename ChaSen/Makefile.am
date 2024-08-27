@@ -6,7 +6,6 @@ lexical_dic   = @CHASEN_LEXICAL_DIC@
 gen_data      = @CHASEN_GENDATA@
 pre_data      = @CHASEN_PREDATA@
 
-SUBDIRS = doc
 
 dic_DATA      = $(pre_data) $(gen_data)
 EXTRA_DIST    = $(pre_data) $(lexical_dic) $(manual_files) 

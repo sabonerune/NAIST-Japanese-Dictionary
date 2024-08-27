@@ -1,6 +1,6 @@
 AC_INIT(connect.cha)
 AC_PREREQ(2.13)
-AM_INIT_AUTOMAKE(naist-jdic, 0.4.0)
+AM_INIT_AUTOMAKE(naist-jdic, 0.4.1)
 AM_MAINTAINER_MODE
 
 dnl
@@ -68,22 +68,22 @@ AC_SUBST(CHASEN_DIC_DIR)
 AC_SUBST(CHASEN_MKCHADIC_DIR)
 AC_SUBST(CHASEN_CHASENRC_PATH)
 
-EMACS=emacs
-AC_ARG_WITH(emacs,
-[  --with-emacs=EMACS      Use EMACS for producing info files [default=emacs]],
-[EMACS=$with_emacs])
-AC_SUBST(EMACS)
+# EMACS=emacs
+# AC_ARG_WITH(emacs,
+# [  --with-emacs=EMACS      Use EMACS for producing info files [default=emacs]],
+# [EMACS=$with_emacs])
+# AC_SUBST(EMACS)
 
-TEX=platex
-AC_ARG_WITH(tex,
-[  --with-tex=TEX          Use TEX for producing dvi files [default=ptex]],
-[TEX=$with_tex])
-AC_SUBST(TEX)
+# TEX=platex
+# AC_ARG_WITH(tex,
+# [  --with-tex=TEX          Use TEX for producing dvi files [default=ptex]],
+# [TEX=$with_tex])
+# AC_SUBST(TEX)
 
 CHASEN_LEXICAL_DIC=`echo *.dic`
 AC_SUBST(CHASEN_LEXICAL_DIC)
 
-CHASEN_MANUAL_FILES="INSTALL-ja"
+CHASEN_MANUAL_FILES="INSTALL-ja README"
 AC_SUBST(CHASEN_MANUAL_FILES)
 
 CHASEN_GENDATA="matrix.cha table.cha chadic.da chadic.lex chadic.dat"
@@ -92,7 +92,7 @@ AC_SUBST(CHASEN_GENDATA)
 CHASEN_PREDATA="grammar.cha ctypes.cha cforms.cha chasenrc connect.cha Makefile.bat" 
 AC_SUBST(CHASEN_PREDATA)
 
-AC_OUTPUT([Makefile chasenrc version.cha doc/Makefile])
+AC_OUTPUT([Makefile chasenrc version.cha])
 # Local Variables:
 # mode:shell-script
 # sh-indentation:4
