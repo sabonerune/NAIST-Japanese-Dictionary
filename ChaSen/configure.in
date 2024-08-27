@@ -1,8 +1,8 @@
 AC_INIT(connect.cha)
 AC_PREREQ(2.13)
-AM_INIT_AUTOMAKE(naist-jdic, 0.3.0)
+AM_INIT_AUTOMAKE(naist-jdic, 0.4.0)
 AM_MAINTAINER_MODE
-AC_CONFIG_HEADERS
+
 dnl
 dnl Checks for programs.
 dnl
@@ -74,17 +74,16 @@ AC_ARG_WITH(emacs,
 [EMACS=$with_emacs])
 AC_SUBST(EMACS)
 
-TEX=ptex
+TEX=platex
 AC_ARG_WITH(tex,
 [  --with-tex=TEX          Use TEX for producing dvi files [default=ptex]],
 [TEX=$with_tex])
 AC_SUBST(TEX)
 
-
 CHASEN_LEXICAL_DIC=`echo *.dic`
 AC_SUBST(CHASEN_LEXICAL_DIC)
 
-CHASEN_MANUAL_FILES="INSTALL-ja doc/NAIST-jdic-ja.pdf"
+CHASEN_MANUAL_FILES="INSTALL-ja"
 AC_SUBST(CHASEN_MANUAL_FILES)
 
 CHASEN_GENDATA="matrix.cha table.cha chadic.da chadic.lex chadic.dat"
@@ -93,7 +92,7 @@ AC_SUBST(CHASEN_GENDATA)
 CHASEN_PREDATA="grammar.cha ctypes.cha cforms.cha chasenrc connect.cha Makefile.bat" 
 AC_SUBST(CHASEN_PREDATA)
 
-AC_OUTPUT([Makefile chasenrc version.cha ])
+AC_OUTPUT([Makefile chasenrc version.cha doc/Makefile])
 # Local Variables:
 # mode:shell-script
 # sh-indentation:4

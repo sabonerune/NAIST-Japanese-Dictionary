@@ -602,6 +602,7 @@ target_alias
 INSTALL_PROGRAM
 INSTALL_SCRIPT
 INSTALL_DATA
+CYGPATH_W
 PACKAGE
 VERSION
 ACLOCAL
@@ -609,12 +610,16 @@ AUTOCONF
 AUTOMAKE
 AUTOHEADER
 MAKEINFO
-AMTAR
 install_sh
 STRIP
 INSTALL_STRIP_PROGRAM
+mkdir_p
 AWK
 SET_MAKE
+am__leading_dot
+AMTAR
+am__tar
+am__untar
 MAINTAINER_MODE_TRUE
 MAINTAINER_MODE_FALSE
 MAINT
@@ -1207,8 +1212,8 @@ if test -n "$ac_init_help"; then
 Optional Features:
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
-  --enable-maintainer-mode enable make rules and dependencies not useful
-                          (and sometimes confusing) to the casual installer
+  --enable-maintainer-mode  enable make rules and dependencies not useful
+			  (and sometimes confusing) to the casual installer
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -1640,7 +1645,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
-am__api_version="1.6"
+am__api_version="1.9"
 ac_aux_dir=
 for ac_dir in "$srcdir" "$srcdir/.." "$srcdir/../.."; do
   if test -f "$ac_dir/install-sh"; then
@@ -1810,7 +1815,6 @@ _ACEOF
 program_transform_name=`echo $program_transform_name | sed -f conftest.sed`
 rm -f conftest.sed
 
-
 # expand $ac_aux_dir to an absolute path
 am_aux_dir=`cd $ac_aux_dir && pwd`
 
@@ -1822,6 +1826,39 @@ else
   am_missing_run=
   { echo "$as_me:$LINENO: WARNING: \`missing' script is too old or missing" >&5
 echo "$as_me: WARNING: \`missing' script is too old or missing" >&2;}
+fi
+
+if mkdir -p --version . >/dev/null 2>&1 && test ! -d ./--version; then
+  # We used to keeping the `.' as first argument, in order to
+  # allow $(mkdir_p) to be used without argument.  As in
+  #   $(mkdir_p) $(somedir)
+  # where $(somedir) is conditionally defined.  However this is wrong
+  # for two reasons:
+  #  1. if the package is installed by a user who cannot write `.'
+  #     make install will fail,
+  #  2. the above comment should most certainly read
+  #     $(mkdir_p) $(DESTDIR)$(somedir)
+  #     so it does not work when $(somedir) is undefined and
+  #     $(DESTDIR) is not.
+  #  To support the latter case, we have to write
+  #     test -z "$(somedir)" || $(mkdir_p) $(DESTDIR)$(somedir),
+  #  so the `.' trick is pointless.
+  mkdir_p='mkdir -p --'
+else
+  # On NextStep and OpenStep, the `mkdir' command does not
+  # recognize any option.  It will interpret all options as
+  # directories to create, and then abort because `.' already
+  # exists.
+  for d in ./-p ./--version;
+  do
+    test -d $d && rmdir $d
+  done
+  # $(mkinstalldirs) is defined by Automake if mkinstalldirs exists.
+  if test -f "$ac_aux_dir/mkinstalldirs"; then
+    mkdir_p='$(mkinstalldirs)'
+  else
+    mkdir_p='$(install_sh) -d'
+  fi
 fi
 
 for ac_prog in gawk mawk nawk awk
@@ -1896,7 +1933,16 @@ echo "${ECHO_T}no" >&6; }
   SET_MAKE="MAKE=${MAKE-make}"
 fi
 
- # test to see if srcdir already configured
+rm -rf .tst 2>/dev/null
+mkdir .tst 2>/dev/null
+if test -d .tst; then
+  am__leading_dot=.
+else
+  am__leading_dot=_
+fi
+rmdir .tst 2>/dev/null
+
+# test to see if srcdir already configured
 if test "`cd $srcdir && pwd`" != "`pwd`" &&
    test -f $srcdir/config.status; then
   { { echo "$as_me:$LINENO: error: source directory already configured; run \"make distclean\" there first" >&5
@@ -1904,9 +1950,19 @@ echo "$as_me: error: source directory already configured; run \"make distclean\"
    { (exit 1); exit 1; }; }
 fi
 
+# test whether we have cygpath
+if test -z "$CYGPATH_W"; then
+  if (cygpath --version) >/dev/null 2>/dev/null; then
+    CYGPATH_W='cygpath -w'
+  else
+    CYGPATH_W=echo
+  fi
+fi
+
+
 # Define the identity of the package.
  PACKAGE=naist-jdic
- VERSION=0.3.0
+ VERSION=0.4.0
 
 
 cat >>confdefs.h <<_ACEOF
@@ -1933,9 +1989,6 @@ AUTOHEADER=${AUTOHEADER-"${am_missing_run}autoheader"}
 
 
 MAKEINFO=${MAKEINFO-"${am_missing_run}makeinfo"}
-
-
-AMTAR=${AMTAR-"${am_missing_run}tar"}
 
 install_sh=${install_sh-"$am_aux_dir/install-sh"}
 
@@ -2045,6 +2098,13 @@ INSTALL_STRIP_PROGRAM="\${SHELL} \$(install_sh) -c -s"
 
 # We need awk for the "check" target.  The system "awk" is bad on
 # some platforms.
+# Always define AMTAR for backward compatibility.
+
+AMTAR=${AMTAR-"${am_missing_run}tar"}
+
+am__tar='${AMTAR} chof - "$$tardir"'; am__untar='${AMTAR} xf -'
+
+
 
 
 
@@ -2072,7 +2132,6 @@ fi
   MAINT=$MAINTAINER_MODE_TRUE
 
 
-ac_config_headers="$ac_config_headers "
 
 
 # Find a good install program.  We prefer a C program (faster),
@@ -2319,7 +2378,7 @@ fi
 
 
 
-TEX=ptex
+TEX=platex
 
 # Check whether --with-tex was given.
 if test "${with_tex+set}" = set; then
@@ -2328,11 +2387,10 @@ fi
 
 
 
-
 CHASEN_LEXICAL_DIC=`echo *.dic`
 
 
-CHASEN_MANUAL_FILES="INSTALL-ja doc/NAIST-jdic-ja.pdf"
+CHASEN_MANUAL_FILES="INSTALL-ja"
 
 
 CHASEN_GENDATA="matrix.cha table.cha chadic.da chadic.lex chadic.dat"
@@ -2341,7 +2399,7 @@ CHASEN_GENDATA="matrix.cha table.cha chadic.da chadic.lex chadic.dat"
 CHASEN_PREDATA="grammar.cha ctypes.cha cforms.cha chasenrc connect.cha Makefile.bat"
 
 
-ac_config_files="$ac_config_files Makefile chasenrc version.cha"
+ac_config_files="$ac_config_files Makefile chasenrc version.cha doc/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -2421,7 +2479,37 @@ test "x$prefix" = xNONE && prefix=$ac_default_prefix
 # Let make expand exec_prefix.
 test "x$exec_prefix" = xNONE && exec_prefix='${prefix}'
 
-DEFS=-DHAVE_CONFIG_H
+# Transform confdefs.h into DEFS.
+# Protect against shell expansion while executing Makefile rules.
+# Protect against Makefile macro expansion.
+#
+# If the first sed substitution is executed (which looks for macros that
+# take arguments), then branch to the quote section.  Otherwise,
+# look for a macro that doesn't take arguments.
+ac_script='
+t clear
+:clear
+s/^[	 ]*#[	 ]*define[	 ][	 ]*\([^	 (][^	 (]*([^)]*)\)[	 ]*\(.*\)/-D\1=\2/g
+t quote
+s/^[	 ]*#[	 ]*define[	 ][	 ]*\([^	 ][^	 ]*\)[	 ]*\(.*\)/-D\1=\2/g
+t quote
+b any
+:quote
+s/[	 `~#$^&*(){}\\|;'\''"<>?]/\\&/g
+s/\[/\\&/g
+s/\]/\\&/g
+s/\$/$$/g
+H
+:any
+${
+	g
+	s/^\n//
+	s/\n/ /g
+	p
+}
+'
+DEFS=`sed -n "$ac_script" confdefs.h`
+
 
 ac_libobjs=
 ac_ltlibobjs=
@@ -2750,7 +2838,6 @@ _ACEOF
 cat >>$CONFIG_STATUS <<_ACEOF
 # Files that config.status was made for.
 config_files="$ac_config_files"
-config_headers="$ac_config_headers"
 
 _ACEOF
 
@@ -2768,14 +2855,9 @@ Usage: $0 [OPTIONS] [FILE]...
       --recheck    update $as_me by reconfiguring in the same conditions
   --file=FILE[:TEMPLATE]
 		   instantiate the configuration file FILE
-  --header=FILE[:TEMPLATE]
-		   instantiate the configuration header FILE
 
 Configuration files:
 $config_files
-
-Configuration headers:
-$config_headers
 
 Report bugs to <bug-autoconf@gnu.org>."
 
@@ -2826,16 +2908,7 @@ do
     $ac_shift
     CONFIG_FILES="$CONFIG_FILES $ac_optarg"
     ac_need_defaults=false;;
-  --header | --heade | --head | --hea )
-    $ac_shift
-    CONFIG_HEADERS="$CONFIG_HEADERS $ac_optarg"
-    ac_need_defaults=false;;
-  --he | --h)
-    # Conflict between --help and --header
-    { echo "$as_me: error: ambiguous option: $1
-Try \`$0 --help' for more information." >&2
-   { (exit 1); exit 1; }; };;
-  --help | --hel | -h )
+  --he | --h |  --help | --hel | -h )
     echo "$ac_cs_usage"; exit ;;
   -q | -quiet | --quiet | --quie | --qui | --qu | --q \
   | -silent | --silent | --silen | --sile | --sil | --si | --s)
@@ -2893,6 +2966,7 @@ do
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "chasenrc") CONFIG_FILES="$CONFIG_FILES chasenrc" ;;
     "version.cha") CONFIG_FILES="$CONFIG_FILES version.cha" ;;
+    "doc/Makefile") CONFIG_FILES="$CONFIG_FILES doc/Makefile" ;;
 
   *) { { echo "$as_me:$LINENO: error: invalid argument: $ac_config_target" >&5
 echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
@@ -2907,7 +2981,6 @@ done
 # bizarre bug on SunOS 4.1.3.
 if $ac_need_defaults; then
   test "${CONFIG_FILES+set}" = set || CONFIG_FILES=$config_files
-  test "${CONFIG_HEADERS+set}" = set || CONFIG_HEADERS=$config_headers
 fi
 
 # Have a temporary directory for convenience.  Make it in the build tree
@@ -2994,6 +3067,7 @@ target_alias!$target_alias$ac_delim
 INSTALL_PROGRAM!$INSTALL_PROGRAM$ac_delim
 INSTALL_SCRIPT!$INSTALL_SCRIPT$ac_delim
 INSTALL_DATA!$INSTALL_DATA$ac_delim
+CYGPATH_W!$CYGPATH_W$ac_delim
 PACKAGE!$PACKAGE$ac_delim
 VERSION!$VERSION$ac_delim
 ACLOCAL!$ACLOCAL$ac_delim
@@ -3001,12 +3075,16 @@ AUTOCONF!$AUTOCONF$ac_delim
 AUTOMAKE!$AUTOMAKE$ac_delim
 AUTOHEADER!$AUTOHEADER$ac_delim
 MAKEINFO!$MAKEINFO$ac_delim
-AMTAR!$AMTAR$ac_delim
 install_sh!$install_sh$ac_delim
 STRIP!$STRIP$ac_delim
 INSTALL_STRIP_PROGRAM!$INSTALL_STRIP_PROGRAM$ac_delim
+mkdir_p!$mkdir_p$ac_delim
 AWK!$AWK$ac_delim
 SET_MAKE!$SET_MAKE$ac_delim
+am__leading_dot!$am__leading_dot$ac_delim
+AMTAR!$AMTAR$ac_delim
+am__tar!$am__tar$ac_delim
+am__untar!$am__untar$ac_delim
 MAINTAINER_MODE_TRUE!$MAINTAINER_MODE_TRUE$ac_delim
 MAINTAINER_MODE_FALSE!$MAINTAINER_MODE_FALSE$ac_delim
 MAINT!$MAINT$ac_delim
@@ -3024,7 +3102,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 68; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 73; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
@@ -3081,7 +3159,7 @@ cat >>$CONFIG_STATUS <<\_ACEOF
 fi # test -n "$CONFIG_FILES"
 
 
-for ac_tag in  :F $CONFIG_FILES  :H $CONFIG_HEADERS
+for ac_tag in  :F $CONFIG_FILES
 do
   case $ac_tag in
   :[FHLC]) ac_mode=$ac_tag; continue;;
@@ -3321,104 +3399,7 @@ which seems to be undefined.  Please make sure it is defined." >&2;}
   *) rm -f "$ac_file"; mv "$tmp/out" $ac_file;;
   esac
  ;;
-  :H)
-  #
-  # CONFIG_HEADER
-  #
-_ACEOF
 
-# Transform confdefs.h into a sed script `conftest.defines', that
-# substitutes the proper values into config.h.in to produce config.h.
-rm -f conftest.defines conftest.tail
-# First, append a space to every undef/define line, to ease matching.
-echo 's/$/ /' >conftest.defines
-# Then, protect against being on the right side of a sed subst, or in
-# an unquoted here document, in config.status.  If some macros were
-# called several times there might be several #defines for the same
-# symbol, which is useless.  But do not sort them, since the last
-# AC_DEFINE must be honored.
-ac_word_re=[_$as_cr_Letters][_$as_cr_alnum]*
-# These sed commands are passed to sed as "A NAME B PARAMS C VALUE D", where
-# NAME is the cpp macro being defined, VALUE is the value it is being given.
-# PARAMS is the parameter list in the macro definition--in most cases, it's
-# just an empty string.
-ac_dA='s,^\\([	 #]*\\)[^	 ]*\\([	 ]*'
-ac_dB='\\)[	 (].*,\\1define\\2'
-ac_dC=' '
-ac_dD=' ,'
-
-uniq confdefs.h |
-  sed -n '
-	t rset
-	:rset
-	s/^[	 ]*#[	 ]*define[	 ][	 ]*//
-	t ok
-	d
-	:ok
-	s/[\\&,]/\\&/g
-	s/^\('"$ac_word_re"'\)\(([^()]*)\)[	 ]*\(.*\)/ '"$ac_dA"'\1'"$ac_dB"'\2'"${ac_dC}"'\3'"$ac_dD"'/p
-	s/^\('"$ac_word_re"'\)[	 ]*\(.*\)/'"$ac_dA"'\1'"$ac_dB$ac_dC"'\2'"$ac_dD"'/p
-  ' >>conftest.defines
-
-# Remove the space that was appended to ease matching.
-# Then replace #undef with comments.  This is necessary, for
-# example, in the case of _POSIX_SOURCE, which is predefined and required
-# on some systems where configure will not decide to define it.
-# (The regexp can be short, since the line contains either #define or #undef.)
-echo 's/ $//
-s,^[	 #]*u.*,/* & */,' >>conftest.defines
-
-# Break up conftest.defines:
-ac_max_sed_lines=50
-
-# First sed command is:	 sed -f defines.sed $ac_file_inputs >"$tmp/out1"
-# Second one is:	 sed -f defines.sed "$tmp/out1" >"$tmp/out2"
-# Third one will be:	 sed -f defines.sed "$tmp/out2" >"$tmp/out1"
-# et cetera.
-ac_in='$ac_file_inputs'
-ac_out='"$tmp/out1"'
-ac_nxt='"$tmp/out2"'
-
-while :
-do
-  # Write a here document:
-    cat >>$CONFIG_STATUS <<_ACEOF
-    # First, check the format of the line:
-    cat >"\$tmp/defines.sed" <<\\CEOF
-/^[	 ]*#[	 ]*undef[	 ][	 ]*$ac_word_re[	 ]*\$/b def
-/^[	 ]*#[	 ]*define[	 ][	 ]*$ac_word_re[(	 ]/b def
-b
-:def
-_ACEOF
-  sed ${ac_max_sed_lines}q conftest.defines >>$CONFIG_STATUS
-  echo 'CEOF
-    sed -f "$tmp/defines.sed"' "$ac_in >$ac_out" >>$CONFIG_STATUS
-  ac_in=$ac_out; ac_out=$ac_nxt; ac_nxt=$ac_in
-  sed 1,${ac_max_sed_lines}d conftest.defines >conftest.tail
-  grep . conftest.tail >/dev/null || break
-  rm -f conftest.defines
-  mv conftest.tail conftest.defines
-done
-rm -f conftest.defines conftest.tail
-
-echo "ac_result=$ac_in" >>$CONFIG_STATUS
-cat >>$CONFIG_STATUS <<\_ACEOF
-  if test x"$ac_file" != x-; then
-    echo "/* $configure_input  */" >"$tmp/config.h"
-    cat "$ac_result" >>"$tmp/config.h"
-    if diff $ac_file "$tmp/config.h" >/dev/null 2>&1; then
-      { echo "$as_me:$LINENO: $ac_file is unchanged" >&5
-echo "$as_me: $ac_file is unchanged" >&6;}
-    else
-      rm -f $ac_file
-      mv "$tmp/config.h" $ac_file
-    fi
-  else
-    echo "/* $configure_input  */"
-    cat "$ac_result"
-  fi
-  rm -f "$tmp/out12"
- ;;
 
 
   esac
