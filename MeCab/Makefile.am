@@ -2,7 +2,7 @@ mecab_dict_index = @MECAB_DICT_INDEX@
 dicdir           = @MECAB_DICDIR@
 
 # SUBDIRS    = doc script
-dic_DATA   = @MECAB_GENDATA@ left-id.def right-id.def rewrite.def pos-id.def dicrc @MECAB_LEXICAL_DIC@ @MECAB_PREDATA@
+dic_DATA   = @MECAB_GENDATA@ @MECAB_LEXICAL_DIC@ @MECAB_PREDATA@
 EXTRA_DIST = @MECAB_LEXICAL_DIC@ @MECAB_PREDATA@ RESULT
 CLEANFILES = @MECAB_GENDATA@
 
